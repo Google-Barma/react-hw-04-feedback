@@ -1,22 +1,18 @@
-import { v4 as uuid } from 'uuid';
 import Section from './Section';
 import Notification from './Notification';
 import propTypes from 'prop-types';
 
-export default function Statistics({ stats, total, positivePercentage }) {
+export default function Statistics(props) {
+  const names = Object.keys(props);
   return (
     <Section title={'Statistics'}>
-      {total > 0 ? (
+      {props.total > 0 ? (
         <ul>
-          {stats.map(stat => (
-            <li key={uuid()}>{stat.join(': ')}</li>
+          {names.map(name => (
+            <li key={name}>
+              {name}: {props[name]}
+            </li>
           ))}
-          <li>
-            total: <span>{total}</span>
-          </li>
-          <li>
-            positive feedback: <span>{positivePercentage}%</span>
-          </li>
         </ul>
       ) : (
         <Notification message={'No feedback given'} />

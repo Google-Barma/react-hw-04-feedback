@@ -37,11 +37,6 @@ export default function App() {
     return total > 0 ? Math.round((good / total) * 100) : 0;
   };
 
-  const makeStatisticsList = () => {
-    const state = { good: good, neutral: neutral, bad: bad };
-    return Object.entries(state);
-  };
-
   const total = countTotalFeedback();
 
   return (
@@ -51,7 +46,9 @@ export default function App() {
         onLeaveFeedback={leaveFeedback}
       />
       <Statistics
-        stats={makeStatisticsList()}
+        good={good}
+        neutral={neutral}
+        bad={bad}
         total={total}
         positivePercentage={countPositiveFeedbackPercentage()}
       />
