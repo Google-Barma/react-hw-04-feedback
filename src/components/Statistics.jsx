@@ -1,19 +1,26 @@
+import { connect } from 'react-redux';
 import Section from './Section';
 import Notification from './Notification';
-import propTypes from 'prop-types';
 
-export default function Statistics(props) {
-  const names = Object.keys(props);
+function Statistics({ state, total, percentage }) {
+  const names = Object.keys(state);
+
   return (
     <Section title={'Statistics'}>
-      {props.total > 0 ? (
-        <ul>
-          {names.map(name => (
-            <li key={name}>
-              {name}: {props[name]}
-            </li>
-          ))}
-        </ul>
+      {total > 0 ? (
+        <>
+          <ul>
+            {names.map(name => (
+              <li key={name}>
+                {name}: {state[name]}
+              </li>
+            ))}
+          </ul>
+          <ul>
+            <li>total: {total}</li>
+            <li>percentage: {percentage}</li>
+          </ul>
+        </>
       ) : (
         <Notification message={'No feedback given'} />
       )}
@@ -21,8 +28,16 @@ export default function Statistics(props) {
   );
 }
 
-Statistics.propTypes = {
-  stats: propTypes.arrayOf(propTypes.array),
-  total: propTypes.number.isRequired,
-  positivePersentage: propTypes.number,
-};
+const culcTotal = state =>
+  Object.values(state.statistics).reduce((total, value) => total + value, 0);
+
+const percentage = (state, total) =>
+  total > 0 ? Math.round((state.statistics.good / total) * 100) : null;
+
+const mapStateToProps = state => ({
+  state: state.statistics,
+  total: culcTotal(state),
+  percentage: percentage(state, culcTotal(state)),
+});
+
+export default connect(mapStateToProps)(Statistics);

@@ -1,24 +1,35 @@
-import { v4 as uuidv4 } from 'uuid';
+import { connect } from 'react-redux';
+import {
+  goodAction,
+  neutralAction,
+  badAction,
+} from '../redux/statistics-actions';
 import Section from './Section';
-import propTypes from 'prop-types';
 
-export default function FeedbackOptions({ options, onLeaveFeedback }) {
+function FeedbackOptions({ onClickGood, onClickNeutral, onClickBad }) {
   return (
     <Section title={'Please leave feedback'}>
-      {Object.keys(options).map(key => (
-        <button
-          type="button"
-          onClick={() => onLeaveFeedback(key)}
-          key={uuidv4()}
-        >
-          {key}
-        </button>
-      ))}
+      <button type="button" onClick={() => onClickGood(1)}>
+        good
+      </button>
+      <button type="button" onClick={() => onClickNeutral(1)}>
+        neutral
+      </button>
+      <button type="button" onClick={() => onClickBad(1)}>
+        bad
+      </button>
     </Section>
   );
 }
 
-FeedbackOptions.propTypes = {
-  options: propTypes.object.isRequired,
-  onLeaveFeedback: propTypes.func.isRequired,
-};
+const mapStateToProps = state => ({
+  options: state.statistics,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onClickGood: step => dispatch(goodAction(step)),
+  onClickNeutral: step => dispatch(neutralAction(step)),
+  onClickBad: step => dispatch(badAction(step)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedbackOptions);
