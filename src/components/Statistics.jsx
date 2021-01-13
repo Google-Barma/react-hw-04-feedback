@@ -1,18 +1,34 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Section from './Section';
 import Notification from './Notification';
 
-function Statistics(statistics) {
-  const names = Object.keys(statistics).filter(item => item !== 'dispatch');
+export default function Statistics() {
+  const statistics = useSelector(state => state.statistics);
+  const store = Object.assign({}, statistics);
+
+  const calcTotal = () =>
+    Object.values(statistics).reduce((total, value) => total + value, 0);
+
+  store.total = calcTotal();
+
+  const percentage = () => {
+    return store.total > 0
+      ? Math.round((store.good / store.total) * 100)
+      : null;
+  };
+
+  store.percentage = percentage();
+
+  const names = Object.keys(store);
 
   return (
     <Section title={'Statistics'}>
-      {statistics.total > 0 ? (
+      {store.total > 0 ? (
         <>
           <ul>
             {names.map(name => (
               <li key={name}>
-                {name}: {statistics[name]}
+                {name}: {store[name]}
               </li>
             ))}
           </ul>
@@ -23,19 +39,3 @@ function Statistics(statistics) {
     </Section>
   );
 }
-
-const culcTotal = state =>
-  Object.values(state.statistics).reduce((total, value) => total + value, 0);
-
-const percentage = (state, total) =>
-  total > 0 ? Math.round((state.statistics.good / total) * 100) : null;
-
-const mapStateToProps = state => ({
-  good: state.statistics.good,
-  neutral: state.statistics.neutral,
-  bad: state.statistics.bad,
-  total: culcTotal(state),
-  percentage: percentage(state, culcTotal(state)),
-});
-
-export default connect(mapStateToProps)(Statistics);

@@ -1,9 +1,13 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '../redux/statistics-actions';
 import Section from './Section';
 
-function FeedbackOptions({ options, onClickBtn }) {
+export default function FeedbackOptions() {
+  const options = useSelector(state => state.statistics);
   const names = Object.keys(options);
+  const dispatch = useDispatch();
+
+  const onClickBtn = type => dispatch(increment(type));
 
   return (
     <Section title={'Please leave feedback'}>
@@ -19,13 +23,3 @@ function FeedbackOptions({ options, onClickBtn }) {
     </Section>
   );
 }
-
-const mapStateToProps = state => ({
-  options: state.statistics,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onClickBtn: type => dispatch(increment(type)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(FeedbackOptions);
