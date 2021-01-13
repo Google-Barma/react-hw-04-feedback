@@ -2,17 +2,17 @@ import { connect } from 'react-redux';
 import Section from './Section';
 import Notification from './Notification';
 
-function Statistics(statistic) {
-  const names = Object.keys(statistic).filter(item => item !== 'dispatch');
+function Statistics(statistics) {
+  const names = Object.keys(statistics).filter(item => item !== 'dispatch');
 
   return (
     <Section title={'Statistics'}>
-      {statistic.total > 0 ? (
+      {statistics.total > 0 ? (
         <>
           <ul>
             {names.map(name => (
               <li key={name}>
-                {name}: {statistic[name]}
+                {name}: {statistics[name]}
               </li>
             ))}
           </ul>
@@ -38,4 +38,4 @@ const mapStateToProps = state => ({
   percentage: percentage(state, culcTotal(state)),
 });
 
-export default connect(mapStateToProps, null)(Statistics);
+export default connect(mapStateToProps)(Statistics);
