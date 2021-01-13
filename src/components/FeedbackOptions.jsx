@@ -1,23 +1,21 @@
 import { connect } from 'react-redux';
-import {
-  goodAction,
-  neutralAction,
-  badAction,
-} from '../redux/statistics-actions';
+import { increment } from '../redux/statistics-actions';
 import Section from './Section';
 
-function FeedbackOptions({ onClickGood, onClickNeutral, onClickBad }) {
+function FeedbackOptions({ options, onClickBtn }) {
+  const names = Object.keys(options);
+
   return (
     <Section title={'Please leave feedback'}>
-      <button type="button" onClick={() => onClickGood(1)}>
-        good
-      </button>
-      <button type="button" onClick={() => onClickNeutral(1)}>
-        neutral
-      </button>
-      <button type="button" onClick={() => onClickBad(1)}>
-        bad
-      </button>
+      {names.map((name, idx) => (
+        <button
+          key={idx}
+          type="button"
+          onClick={e => onClickBtn(e.target.textContent)}
+        >
+          {name}
+        </button>
+      ))}
     </Section>
   );
 }
@@ -27,9 +25,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onClickGood: step => dispatch(goodAction(step)),
-  onClickNeutral: step => dispatch(neutralAction(step)),
-  onClickBad: step => dispatch(badAction(step)),
+  onClickBtn: type => dispatch(increment(type)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedbackOptions);
